@@ -52,7 +52,6 @@ export default function Home() {
   return (
     <P5jsComponent
       gameState={gameState}
-      setGameState={setGameState}
       points={points}
       timer={timeLeft}
       onGetPoint={handlePoint}

@@ -100,25 +100,15 @@ const sketch = (p) => {
     }
   }
 
-  let gameState = NOT_STARTED;
-  let setGameState;
+  let gameState;
   let onGetPoint;
-  let points = 0;
+  let points;
   let timer;
 
   p.updateWithProps = (props) => {
-    if (props.gameState) {
-      gameState = props.gameState;
-    }
-    if (props.points) {
-      points = props.points;
-    }
-    if (props.timer) {
-      timer = props.timer;
-    }
-    if (props.setGameState) {
-      setGameState = props.setGameState;
-    }
+    points = props.points;
+    timer = props.timer;
+    gameState = props.gameState;
     if (props.onGetPoint) {
       onGetPoint = props.onGetPoint;
     }
@@ -138,7 +128,7 @@ const sketch = (p) => {
     if (gameState === STARTED) {
       p.point.display();
       p.fill(0, 0, 0);
-      if (timer === 1 || timer === 0) {
+      if (timer <= 1) {
         p.fill(255, 0, 0);
       }
       p.textAlign(p.CENTER);
@@ -170,14 +160,6 @@ const sketch = (p) => {
       }
       p.ship.checkEdges();
       p.ship.display();
-
-      if (p.frameCount % 60 == 0) {
-        timer--;
-      }
-      if (p.timer <= 0) {
-        setGameState(GAME_OVER);
-        addScoreEntry(p.points, null);
-      }
     } else if (gameState === GAME_OVER) {
       p.ship.reset();
       p.point.reset();

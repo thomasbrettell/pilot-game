@@ -18,9 +18,9 @@ export const functions = getFunctions(app);
 export const firestore = getFirestore(app);
 export const database = getDatabase(app);
 
-// if (window.location.hostname === 'localhost') {
-//   connectFunctionsEmulator(functions, 'localhost', 5001);
-//   connectFirestoreEmulator(firestore, 'localhost', 8080);
-//   connectDatabaseEmulator(database, 'localhost', 9000);
-// }
+if (window.location.hostname === 'localhost') {
+  // connectFunctionsEmulator(functions, 'localhost', 5001);
+  connectFirestoreEmulator(firestore, 'localhost', 8080);
+  // connectDatabaseEmulator(database, 'localhost', 9000);
+}
 export default app;

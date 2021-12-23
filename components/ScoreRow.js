@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import React from 'react';
 
 export const Row = styled.div`
   display: flex;
@@ -35,14 +36,17 @@ export const Field = styled.div`
   }
 `;
 
-const ScoreRow = ({ name, score, rank, bg, last, first }) => {
-  return (
-    <Row bg={bg} last={last} first={first}>
-      <Field>#{rank + 1}</Field>
-      <Field>{name || 'Anon'}</Field>
-      <Field>{score}</Field>
-    </Row>
-  );
-};
+const ScoreRow = React.forwardRef(
+  ({ name, score, rank, bg, last, first }, ref) => {
+    return (
+      <Row bg={bg} last={last} first={first} ref={ref}>
+        <Field>#{rank + 1}</Field>
+        <Field>{name || 'Anon'}</Field>
+        <Field>{score}</Field>
+      </Row>
+    );
+  }
+);
+ScoreRow.displayName = 'ScoreRow';
 
 export default ScoreRow;

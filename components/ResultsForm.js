@@ -10,7 +10,7 @@ import {
 import Button from './Button';
 import CenterAbs from './CenterAbs';
 import { useState } from 'react/cjs/react.development';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ScoreRow from './ScoreRow';
 import { Row, Field } from './ScoreRow';
@@ -61,6 +61,8 @@ const addScoreEntry = (score, name) => {
 const ResultsForm = ({ playScore, setGameState, startGame }) => {
   const [scores, setScores] = useState(null);
   const [username, setUsername] = useState('');
+  const scoreScrollerRef = useRef();
+  const newScoreRef = useRef();
 
   useEffect(() => {
     const getScores = async () => {
@@ -99,6 +101,16 @@ const ResultsForm = ({ playScore, setGameState, startGame }) => {
     startGame();
   };
 
+  useEffect(() => {
+    if (scores) {
+      //this should center the current players score (its a few pixels out atm and i ceebs figuring it why ftm)
+      scoreScrollerRef.current.scrollTop =
+        newScoreRef.current.offsetTop -
+        scoreScrollerRef.current.clientHeight +
+        newScoreRef.current.clientHeight;
+    }
+  }, [scores]);
+
   return (
     <CenterAbs>
       <Box>
@@ -118,7 +130,7 @@ const ResultsForm = ({ playScore, setGameState, startGame }) => {
             <strong>Score</strong>
           </Field>
         </Row>
-        <OverflowAuto>
+        <OverflowAuto ref={scoreScrollerRef}>
           {scores &&
             scores.map((score, i) => {
               if (score.currentScore) {
@@ -131,6 +143,7 @@ const ResultsForm = ({ playScore, setGameState, startGame }) => {
                     rank={i}
                     first={i === 0}
                     last={i + 1 === scores.length}
+                    ref={newScoreRef}
                   />
                 );
               }
