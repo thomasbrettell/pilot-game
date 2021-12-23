@@ -3,6 +3,11 @@ import { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import CenterAbs from '../components/CenterAbs';
 import ResultsForm from '../components/ResultsForm';
+import VStack from '../components/VStack';
+import Instructions from '../components/Instructions';
+import instructionsImage from '../assets/pilot-game-instructions.svg';
+import Image from 'next/image';
+import ResultsTable from '../components/ResultsTable';
 
 const P5jsComponent = dynamic(() => import('../components/P5Sketch'), {
   ssr: false,
@@ -11,6 +16,8 @@ const P5jsComponent = dynamic(() => import('../components/P5Sketch'), {
 export const NOT_STARTED = 'NOT_STARTED';
 export const STARTED = 'STARTED';
 export const GAME_OVER = 'GAME_OVER';
+export const INSTRUCTIONS = 'INSTRUCTIONS';
+export const LEADERBOARD = 'LEADERBOARD';
 
 const INTERVAL_TIME = 4;
 
@@ -58,7 +65,17 @@ export default function Home() {
     >
       {gameState === NOT_STARTED && (
         <CenterAbs>
-          <Button onClick={startHandler}>Start game</Button>
+          <VStack>
+            <Button onClick={startHandler} salient>
+              Start game
+            </Button>
+            <Button onClick={() => setGameState(INSTRUCTIONS)}>
+              Instructions
+            </Button>
+            <Button onClick={() => setGameState(LEADERBOARD)}>
+              Leader board
+            </Button>
+          </VStack>
         </CenterAbs>
       )}
       {gameState === GAME_OVER && (
@@ -67,6 +84,20 @@ export default function Home() {
           setGameState={setGameState}
           startGame={startHandler}
         />
+      )}
+      {gameState === INSTRUCTIONS && (
+        <CenterAbs>
+          <Instructions>
+            <Image src={instructionsImage} alt='instructions' layout='fill' />
+          </Instructions>
+          <Button onClick={() => setGameState(NOT_STARTED)}>Close</Button>
+        </CenterAbs>
+      )}
+      {gameState === LEADERBOARD && (
+        <CenterAbs>
+          <ResultsTable />
+          <Button onClick={() => setGameState(NOT_STARTED)}>Close</Button>
+        </CenterAbs>
       )}
     </P5jsComponent>
   );

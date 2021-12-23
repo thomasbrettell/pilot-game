@@ -157,12 +157,12 @@ const ResultsForm = ({ playScore, setGameState, startGame }) => {
                 />
               );
             })}
+          {!scores && (
+            <CenterAbs>
+              <LoadingSpinner />
+            </CenterAbs>
+          )}
         </OverflowAuto>
-        {!scores && (
-          <CenterAbs>
-            <LoadingSpinner />
-          </CenterAbs>
-        )}
       </Box>
       <ButtonContainer>
         <Button onClick={submitHandler}>Submit score</Button>

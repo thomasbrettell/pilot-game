@@ -8,6 +8,12 @@ export default styled.button`
   font-size: 12px;
   cursor: pointer;
 
+  ${p => p.salient && `
+    background: black;
+    color: white;
+    font-weight: bold;
+  `}
+
   &:hover {
     box-shadow: 0 0 3px #888888;
   }
