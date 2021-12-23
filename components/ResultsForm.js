@@ -99,7 +99,7 @@ const ResultsForm = ({ playScore, setGameState, startGame }) => {
   };
 
   const startHandler = () => {
-    addScoreEntry(playScore, '');
+    addScoreEntry(playScore, username);
     startGame();
   };
 
