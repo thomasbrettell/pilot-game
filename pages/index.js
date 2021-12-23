@@ -32,7 +32,6 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log('ok');
       if (gameState === STARTED) {
         setTimeLeft(timeLeft - 1);
         if (timeLeft - 1 <= 0) {
@@ -63,7 +62,13 @@ export default function Home() {
           <Button onClick={startHandler}>Start game</Button>
         </CenterAbs>
       )}
-      {gameState === GAME_OVER && <ResultsForm />}
+      {gameState === GAME_OVER && (
+        <ResultsForm
+          playScore={points}
+          setGameState={setGameState}
+          startGame={startHandler}
+        />
+      )}
     </P5jsComponent>
   );
 }

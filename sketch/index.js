@@ -5,35 +5,6 @@ const STARTED = 'STARTED';
 const GAME_OVER = 'GAME_OVER';
 
 const sketch = (p) => {
-  let gameState = NOT_STARTED;
-  let setGameState;
-  let onGetPoint;
-  let points = 0;
-  let timer;
-
-  p.updateWithProps = (props) => {
-    if (props.gameState) {
-      gameState = props.gameState;
-    }
-    if (props.points) {
-      points = props.points;
-    }
-    if (props.timer) {
-      timer = props.timer;
-    }
-    if (props.setGameState) {
-      setGameState = props.setGameState;
-    }
-    if (props.onGetPoint) {
-      onGetPoint = props.onGetPoint;
-    }
-  };
-
-  p.startGame = () => {
-    p.ship.reset();
-    p.point.reset();
-  };
-
   class Point {
     constructor() {
       this.pos = p.createVector(
@@ -129,6 +100,30 @@ const sketch = (p) => {
     }
   }
 
+  let gameState = NOT_STARTED;
+  let setGameState;
+  let onGetPoint;
+  let points = 0;
+  let timer;
+
+  p.updateWithProps = (props) => {
+    if (props.gameState) {
+      gameState = props.gameState;
+    }
+    if (props.points) {
+      points = props.points;
+    }
+    if (props.timer) {
+      timer = props.timer;
+    }
+    if (props.setGameState) {
+      setGameState = props.setGameState;
+    }
+    if (props.onGetPoint) {
+      onGetPoint = props.onGetPoint;
+    }
+  };
+
   p.setup = () => {
     p.createCanvas(600, 600);
     p.ship = new Ship();
@@ -143,7 +138,7 @@ const sketch = (p) => {
     if (gameState === STARTED) {
       p.point.display();
       p.fill(0, 0, 0);
-      if (timer === 1) {
+      if (timer === 1 || timer === 0) {
         p.fill(255, 0, 0);
       }
       p.textAlign(p.CENTER);
@@ -184,12 +179,14 @@ const sketch = (p) => {
         addScoreEntry(p.points, null);
       }
     } else if (gameState === GAME_OVER) {
+      p.ship.reset();
+      p.point.reset();
       p.textSize(16);
       p.textAlign(p.CENTER);
       p.text(
         `You scored ${points} ${points === 1 ? 'point' : 'points'}`,
         p.width / 2,
-        p.height / 2 - 50
+        65
       );
     }
   };

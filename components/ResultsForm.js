@@ -1,7 +1,54 @@
 import { firestore } from '../firebaseClient';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  getDocs,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 import Button from './Button';
 import CenterAbs from './CenterAbs';
+import { useState } from 'react/cjs/react.development';
+import { useEffect } from 'react';
+import styled from 'styled-components';
+import ScoreRow from './ScoreRow';
+import { Row, Field } from './ScoreRow';
+import LoadingSpinner from './LoadingSpinner';
+
+const Box = styled.div`
+  background: white;
+  border: 1px solid black;
+  padding: 10px;
+  width: 300px;
+  min-height: 300px;
+`;
+
+const OverflowAuto = styled.div`
+  overflow: auto;
+  max-height: 222px;
+  border-bottom: 1px solid black;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+`;
+
+const TextInput = styled.input`
+  margin: 0 auto 10px;
+  display: block;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-family: inherit;
+
+  &::placeholder {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+`;
 
 const addScoreEntry = (score, name) => {
   addDoc(collection(firestore, 'scores'), {
@@ -11,10 +58,104 @@ const addScoreEntry = (score, name) => {
   });
 };
 
-const ResultsForm = () => {
+const ResultsForm = ({ playScore, setGameState, startGame }) => {
+  const [scores, setScores] = useState(null);
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const getScores = async () => {
+      const scores = [];
+      const q = query(
+        collection(firestore, 'scores'),
+        orderBy('score', 'desc')
+      );
+      const data = await getDocs(q);
+      data.forEach((dp) => scores.push(dp.data()));
+      scores.push({
+        currentScore: true,
+        score: playScore,
+      });
+      scores.sort((a, b) => {
+        if (a.score < b.score) {
+          return 1;
+        }
+        if (a.score > b.score) {
+          return -1;
+        }
+        return 0;
+      });
+      setScores(scores);
+    };
+    getScores();
+  }, [playScore]);
+
+  const submitHandler = () => {
+    addScoreEntry(playScore, username);
+    setGameState('NOT_STARTED');
+  };
+
+  const startHandler = () => {
+    addScoreEntry(playScore, '');
+    startGame();
+  };
+
   return (
     <CenterAbs>
-      <Button>Replay</Button>
+      <Box>
+        <TextInput
+          placeholder='Enter your name'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Row>
+          <Field>
+            <strong>Rank</strong>
+          </Field>
+          <Field>
+            <strong>Name</strong>
+          </Field>
+          <Field>
+            <strong>Score</strong>
+          </Field>
+        </Row>
+        <OverflowAuto>
+          {scores &&
+            scores.map((score, i) => {
+              if (score.currentScore) {
+                return (
+                  <ScoreRow
+                    key={i}
+                    name={username || 'You'}
+                    score={score.score}
+                    bg='lightcyan'
+                    rank={i}
+                    first={i === 0}
+                    last={i + 1 === scores.length}
+                  />
+                );
+              }
+              return (
+                <ScoreRow
+                  key={i}
+                  name={score.name}
+                  score={score.score}
+                  rank={i}
+                  first={i === 0}
+                  last={i + 1 === scores.length}
+                />
+              );
+            })}
+        </OverflowAuto>
+        {!scores && (
+          <CenterAbs>
+            <LoadingSpinner />
+          </CenterAbs>
+        )}
+      </Box>
+      <ButtonContainer>
+        <Button onClick={submitHandler}>Submit score</Button>
+        <Button onClick={startHandler}>Play again</Button>
+      </ButtonContainer>
     </CenterAbs>
   );
 };
