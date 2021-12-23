@@ -11,7 +11,7 @@ const Box = styled.div`
   border: 1px solid black;
   padding: 10px;
   width: 300px;
-  min-height: 300px;
+  min-height: 262px;
 `;
 
 const OverflowAuto = styled.div`

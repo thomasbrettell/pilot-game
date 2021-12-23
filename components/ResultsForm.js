@@ -14,6 +14,8 @@ import styled from 'styled-components';
 import ScoreRow from './ScoreRow';
 import { Row, Field } from './ScoreRow';
 import LoadingSpinner from './LoadingSpinner';
+import { useSelector, useDispatch } from 'react-redux';
+import { userActions } from '../store/user-slice';
 
 const Box = styled.div`
   background: white;
@@ -58,8 +60,9 @@ const addScoreEntry = (score, name) => {
 };
 
 const ResultsForm = ({ playScore, setGameState, startGame }) => {
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.user.username);
   const [scores, setScores] = useState(null);
-  const [username, setUsername] = useState('');
   const scoreScrollerRef = useRef();
   const newScoreRef = useRef();
 
@@ -116,7 +119,7 @@ const ResultsForm = ({ playScore, setGameState, startGame }) => {
         <TextInput
           placeholder='Enter your name'
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => dispatch(userActions.SET_USERNAME(e.target.value))}
         />
         <Row>
           <Field>
