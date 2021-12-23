@@ -9,8 +9,7 @@ import {
 } from 'firebase/firestore';
 import Button from './Button';
 import CenterAbs from './CenterAbs';
-import { useState } from 'react/cjs/react.development';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ScoreRow from './ScoreRow';
 import { Row, Field } from './ScoreRow';
